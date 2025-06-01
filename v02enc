@@ -1227,7 +1227,7 @@ function print_info($string) {
 }
 
 function print_help() {
-  print("v02enc v0.2b7\n");
+  print("v02enc v0.2b8\n");
   print("\n");
   print("Usage:\n");
   print("======\n");

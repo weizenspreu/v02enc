@@ -1,3 +1,7 @@
+# 0.2b8 (2025-06-01)
+
+* improve syntax of Bash scripts
+
 # 0.2b7 (2024-09-20)
 
 * move KDF iterations into a seperate constant

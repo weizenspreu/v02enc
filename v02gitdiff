@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 
 # set a default for the key file if none is given
-if [[ -z "${V02ENC_KEY}" ]]
-then
+if [[ -z "${V02ENC_KEY}" ]]; then
   V02ENC_KEY="-"
 fi
 
-SCRIPT_DIR="$(/usr/bin/env dirname "$(/usr/bin/env realpath "$0")")"
+SCRIPT_DIR="$(/usr/bin/env dirname "$(/usr/bin/env realpath "${0}")")"
 
 # handle parameters
 GIT_ROOT="${PWD}"
@@ -23,32 +22,25 @@ OUTPUT=()
 TEMPFILE1="${FILE1}"
 TEMPFILE2="${FILE2}"
 
-if [[ ${V02ENC_KEY} == "-" || -f "${V02ENC_KEY}" ]]
-then
-  if [[ -f "${FILE1}" || -f "${FILE2}" ]]
-  then
+if [[ ${V02ENC_KEY} == "-" ]] || [[ -f "${V02ENC_KEY}" ]]; then
+  if [[ -f "${FILE1}" ]] || [[ -f "${FILE2}" ]]; then
     # check if we are comparing v02enc encrypted files
-    if [[ "${FILE1: -7}" == ".v02enc" || "${FILE2: -7}" == ".v02enc" ]]
-    then
+    if [[ "${FILE1: -7}" == ".v02enc" ]] || [[ "${FILE2: -7}" == ".v02enc" ]]; then
       # try to read the encryption key
-      if [[ -z "${V02ENC_PASSPHRASE}" && "${V02ENC_KEY}" == "-" ]]
-      then
+      if [[ -z "${V02ENC_PASSPHRASE}" ]] && [[ "${V02ENC_KEY}" == "-" ]]; then
         # check if there is a key file
-        if [[ -f ~/.v02enc ]]
-        then
+        if [[ -f ~/.v02enc ]]; then
           # read the key file
           V02ENC_PASSPHRASE="$(/usr/bin/env cat ~/.v02enc | /usr/bin/env xxd -p | /usr/bin/env tr -d "\n")"
         else
           # check if we are running macOS
           OS="$(/usr/bin/env uname -s | /usr/bin/env tr "[:upper:]" "[:lower:]")"
 
-          if [[ "$OS" == "darwin" ]]
-          then
+          if [[ "${OS}" == "darwin" ]]; then
             # try to read the default keychain value
             TMP="$(/usr/bin/env security find-generic-password -a "$(/usr/bin/env whoami)" -s "v02enc" -w 2>/dev/null)"
 
-            if [[ "$?" -eq "0" ]]
-            then
+            if [[ "${?}" -eq "0" ]]; then
               V02ENC_PASSPHRASE="${TMP}"
             fi
           fi
@@ -63,39 +55,34 @@ then
       EXITCODE1="0"
       EXITCODE2="0"
 
-      if [[ -f "${FILE1}" ]]
-      then
+      if [[ -f "${FILE1}" ]]; then
         # decrypt the first file
         echo -n "${V02ENC_PASSPHRASE}" | /usr/bin/env xxd -p -r | "${SCRIPT_DIR}/v02enc" --decrypt --key "${V02ENC_KEY}" --input "${FILE1}" --output "${TEMPFILE1}" 2>/dev/null
 
         # store exit code
-        EXITCODE1="$?"
+        EXITCODE1="${?}"
 
-        if [[ "${EXITCODE1}" -eq "0" ]]
-        then
+        if [[ "${EXITCODE1}" -eq "0" ]]; then
           # set restrictive temporary file access
           /usr/bin/env chmod 400 "${TEMPFILE1}"
         fi
       fi
 
-      if [[ -f "${FILE2}" ]]
-      then
+      if [[ -f "${FILE2}" ]]; then
         # decrypt the second file
         echo -n "${V02ENC_PASSPHRASE}" | /usr/bin/env xxd -p -r | "${SCRIPT_DIR}/v02enc" --decrypt --key "${V02ENC_KEY}" --input "${FILE2}" --output "${TEMPFILE2}" 2>/dev/null
 
         # store exit code
-        EXITCODE2="$?"
+        EXITCODE2="${?}"
 
-        if [[ "${EXITCODE2}" -eq "0" ]]
-        then
+        if [[ "${EXITCODE2}" -eq "0" ]]; then
           # set restrictive temporary file access
           /usr/bin/env chmod 400 "${TEMPFILE2}"
         fi
       fi
 
       # check that both files could be decrypted
-      if [[ "${EXITCODE1}" -eq "0" && "${EXITCODE2}" -eq "0" ]]
-      then
+      if [[ "${EXITCODE1}" -eq "0" ]] && [[ "${EXITCODE2}" -eq "0" ]]; then
         # prevent normal file diff
         COMPARED="1"
 
@@ -103,17 +90,15 @@ then
         IFS=$'\n' OUTPUT=($(/usr/bin/env diff --color=always -Npu "${TEMPFILE1}" "${TEMPFILE2}"))
 
         # store exit code
-        EXITCODE="$?"
+        EXITCODE="${?}"
       fi
 
-      if [[ -f "${FILE1}" ]]
-      then
+      if [[ -f "${FILE1}" ]]; then
         # try to delete the temporary file either way
         /usr/bin/env rm -f "${TEMPFILE1}"
       fi
 
-      if [[ -f "${FILE2}" ]]
-      then
+      if [[ -f "${FILE2}" ]]; then
         # try to delete the temporary file either way
         /usr/bin/env rm -f "${TEMPFILE2}"
       fi
@@ -122,8 +107,7 @@ then
 fi
 
 # handle as normal files
-if [[ "${COMPARED}" -eq "0" ]]
-then
+if [[ "${COMPARED}" -eq "0" ]]; then
   # reset temporary file names
   TEMPFILE1="${FILE1}"
   TEMPFILE2="${FILE2}"
@@ -135,35 +119,29 @@ then
   IFS=$'\n' OUTPUT=($(/usr/bin/env diff --color=always -Npu "${TEMPFILE1}" "${TEMPFILE2}"))
 
   # store exit code
-  EXITCODE="$?"
+  EXITCODE="${?}"
 fi
 
 # only handle output if there is any output
-if [[ "${#OUTPUT[@]}" -gt "0" ]]
-then
-  if [[ "${MODE1}" != "${MODE2}" ]]
-  then
+if [[ "${#OUTPUT[@]}" -gt "0" ]]; then
+  if [[ "${MODE1}" != "${MODE2}" ]]; then
     echo "old mode ${MODE1}"
     echo "new mode ${MODE2}"
   fi
 
   # check for the known exit code
-  if [[ "${EXITCODE}" -eq "1" ]]
-  then
+  if [[ "${EXITCODE}" -eq "1" ]]; then
     # check if the output is a diff
-    if [[ "${OUTPUT[0]:0:3}" == "---" ]]
-    then
+    if [[ "${OUTPUT[0]:0:3}" == "---" ]]; then
       # prepare first output line
-      if [[ "${FILE1}" == "/dev/null" ]]
-      then
+      if [[ "${FILE1}" == "/dev/null" ]]; then
         OUTPUT[0]="--- /dev/null"
       else
         OUTPUT[0]="--- a/${FILENAME}"
       fi
 
       # prepare second output line
-      if [[ "${FILE2}" == "/dev/null" || ! -f "${FILE2}" ]]
-      then
+      if [[ "${FILE2}" == "/dev/null" || ! -f "${FILE2}" ]]; then
         OUTPUT[1]="+++ /dev/null"
       else
         OUTPUT[1]="+++ b/${FILENAME}"
@@ -175,15 +153,13 @@ then
       PLACEHOLDER1=""
       PLACEHOLDER2=""
 
-      if [[ "${FILE1}" == "/dev/null" ]]
-      then
+      if [[ "${FILE1}" == "/dev/null" ]]; then
         PLACEHOLDER1="/dev/null"
       else
         PLACEHOLDER1="a/${FILENAME}"
       fi
 
-      if [[ "${FILE2}" == "/dev/null" || ! -f "${FILE2}" ]]
-      then
+      if [[ "${FILE2}" == "/dev/null" ]] || [[ ! -f "${FILE2}" ]]; then
         PLACEHOLDER2="/dev/null"
       else
         PLACEHOLDER2="b/${FILENAME}"
@@ -196,3 +172,7 @@ then
     printf "%s\n" "${OUTPUT[@]}"
   fi
 fi
+
+## REMINDER: exiting with other exit code than 0 will break `git diff` 
+## set the exit code
+#exit "${EXITCODE}"
