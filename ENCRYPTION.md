@@ -14,7 +14,7 @@ Messages in the v02 format have the following format:
 
 Messages in the v02 format have the following fields:
 
-* **version** is 1 byte in size and **MUST** have the value `00h`
+* **version** is 1 byte in size and **MUST** have the value `02h`
 * **headersalt** is 32 bytes in size and **SHOULD** contain a cryptographically strong random number
 * **headernonce** is 16 bytes in size and **SHOULD** contain the UNIX timestamp as the first 8 bytes, `FFh` as the next 4th byte and `00h` as the last 4 bytes
 * **messagenonce** is 16 bytes in size and **SHOULD** contain the UNIX timestamp as the first 8 bytes and `00h` as the last 8 bytes
