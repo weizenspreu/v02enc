@@ -22,6 +22,8 @@ cmd.v02hgdiff = /full/path/to/v02hgdiff
 diff = !for FILE in $(hg status -n) ; do hg v02hgdiff "$(hg root)/${FILE}" -o "$(hg root)" ; done
 ```
 
+`v02wg-quick` is a small script that wraps around `wg-quick` that enables a user to store `v02enc`-encrypted Wireguard configuration files. The script transparently decrypts the Wireguard configuration files when calling `v02wg-quick up $interface` and/or `v02wg-quick down $interface`.
+
 `vim02enc` is a small script that enables a user to transparently edit a `v02enc`-encrypted file. After closing the file, it will be encrypted for all former recipients.
 
 ## Help
