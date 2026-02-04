@@ -5,7 +5,7 @@ if [[ -z "${V02ENC_KEY}" ]]; then
   V02ENC_KEY="-"
 fi
 
-# set a default for the passphrase if non is given
+# set a default for the passphrase if none is given
 if [[ -z "${V02ENC_PASSPHRASE}" ]]; then
   # set to empty string by default
   V02ENC_PASSPHRASE=""

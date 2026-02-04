@@ -10,7 +10,7 @@ if [[ -z "${V02ENC_KEY}" ]]; then
   V02ENC_KEY="-"
 fi
 
-# set a de fault for the passphrase if non is given
+# set a default for the passphrase if none is given
 if [[ -z "${V02ENC_PASSPHRASE}" ]]; then
   # set to empty string by default
   V02ENC_PASSPHRASE=""
@@ -129,7 +129,7 @@ if [[ ${V02ENC_KEY} == "-" ]] || [[ -f "${V02ENC_KEY}" ]]; then
           echo "INFO: Skipping unmodified file." >&2
         fi
 
-        # print a message if an error occured
+        # print a message if an error occurred
         if [[ "${SUCCESS}" -ne "0" ]]; then
           echo "ERROR: File could not be encrypted." >&2
           EXITCODE="5"

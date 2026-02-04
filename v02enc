@@ -2,7 +2,7 @@
 <?php
 
 /*
-  Copyright (c) 2023-2025, WeizenSpreu
+  Copyright (c) 2023-2026, WeizenSpreu
   Copyright (c) 2016-2023, SysEleven GmbH
   All rights reserved.
 
@@ -542,7 +542,7 @@ function decrypt_header($input, $recipients, &$data, &$error) {
             $data[HEADERMACKEY]  = hash_hmac("sha256", "mac-header" , $data[KEY], true); // generate mac key
             $data[MESSAGEMACKEY] = hash_hmac("sha256", "mac-message", $data[KEY], true); // generate mac key
 
-            if ((false !== $data[ENCKEY]) && (false !== $data[MESSAGEMACKEY]) && (false !== $data[MESSAGEMACKEY])) {
+            if ((false !== $data[ENCKEY]) && (false !== $data[HEADERMACKEY]) && (false !== $data[MESSAGEMACKEY])) {
               $result = true;
             } else {
               $error = "Key expansion failed.";
@@ -1227,7 +1227,7 @@ function print_info($string) {
 }
 
 function print_help() {
-  print("v02enc v0.2b10\n");
+  print("v02enc v0.2b11\n");
   print("\n");
   print("Usage:\n");
   print("======\n");
@@ -1292,7 +1292,7 @@ function print_help() {
   print("    -U \\\n");
   print("    -w \"$(echo -n \"Password: \" >&2 && \\\n");
   print("          read -s password && \\\n");
-  print("          echo \$password | \\\n");
+  print("          echo \"\$password\" | \\\n");
   print("          xxd -p | \\\n");
   print("          tr -d \"\\n\")\"\n");
   print("\n");
@@ -1303,7 +1303,6 @@ function print_help() {
   print("    -s \"<string>\" \\\n");
   print("    -w | \\\n");
   print("    xxd -p -r\n");
-  
 }
 
 ##### MAIN FUNCTION #####
@@ -1384,7 +1383,7 @@ function main($arguments) {
               $inputstream = fopen("php://memory", "rwb");
               if (false !== $inputstream) {
                 if ((strlen($message) !== fwrite($inputstream, $message)) || !rewind($inputstream)) {
-                  # some error occured
+                  # some error occurred
                   fclose($inputstream);
                   $inputstream = false;
                 }
@@ -1447,7 +1446,7 @@ function main($arguments) {
                                       }
                                     }
                                   } else {
-                                    $error = "Update could not be opened";
+                                    $error = "Update could not be opened.";
                                   }
                                 } else {
                                   $error = "Output could not be armored.";
@@ -1499,7 +1498,7 @@ function main($arguments) {
                         }
                       }
                     } else {
-                      print_error("Output could not be opened");
+                      print_error("Output could not be opened.");
                       $result = 9;
                     }
                   } finally {
@@ -1527,7 +1526,7 @@ function main($arguments) {
                 }
               }
             } else {
-              print_error("Input could not be opened");
+              print_error("Input could not be opened.");
               $result = 5;
             }
           } else {

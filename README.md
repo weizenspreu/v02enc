@@ -92,7 +92,7 @@ You can add a password to the macOS keychain like this:
     -U \
     -w "$(echo -n "Password: " >&2 && \
           read -s password && \
-          echo $password | \
+          echo "$password" | \
           xxd -p | \
           tr -d "\n")"
 
@@ -198,7 +198,7 @@ head -c 32 /dev/random >~/.tmp
 echo -n "Password: " >&2 && \
 read -s password && \
 echo >&2 && \
-echo -n $password | \
+echo -n "$password" | \
 v02enc --armor --encrypt --key - ~/.tmp >~/.v02enc
 
 # delete the unprotected random passphrase
@@ -208,7 +208,7 @@ rm -f ~/.tmp
 echo -n "Password: " >&2 && \
 read -s password && \
 echo >&2 && \
-echo -n $password | \
+echo -n "$password" | \
 v02enc --decrypt --key - ~/.v02enc | \
 v02enc --armor --encrypt --key - --message "This is a test." >./example.v02enc
 
@@ -216,7 +216,7 @@ v02enc --armor --encrypt --key - --message "This is a test." >./example.v02enc
 echo -n "Password: " >&2 && \
 read -s password && \
 echo >&2 && \
-echo -n $password | \
+echo -n "$password" | \
 v02enc --decrypt --key - ~/.v02enc | \
 v02enc --decrypt --key - ./example.v02enc
 ```
@@ -225,7 +225,7 @@ v02enc --decrypt --key - ./example.v02enc
 
 The encryption scheme originates from [Shared-Secrets](https://github.com/weizenspreu/shared-secrets). Shared-Secrets implements `v00` as a password-based encryption scheme supporting a single recipient and `v01` as an RSA-based encryption scheme supporting multiple recipients.
 
-`v02enc` extend the existing encryption schemes with `v02` as a password-based encryption scheme supporting multiple recipients.
+`v02enc` extends the existing encryption schemes with `v02` as a password-based encryption scheme supporting multiple recipients.
 
 ## License
 

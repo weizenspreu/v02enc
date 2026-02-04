@@ -1,3 +1,9 @@
+# 0.2b11 (2026-02-04)
+
+* fix check if HEADERMACKEY was derived
+* fix typos throughout the code
+* fix quotes in examples
+
 # 0.2b10 (2025-12-13)
 
 * add `v02wg-quick`
@@ -12,7 +18,7 @@
 
 # 0.2b7 (2024-09-20)
 
-* move KDF iterations into a seperate constant
+* move KDF iterations into a separate constant
 
 # 0.2b6 (2024-09-11)
 

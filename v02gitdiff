@@ -173,6 +173,6 @@ if [[ "${#OUTPUT[@]}" -gt "0" ]]; then
   fi
 fi
 
-## REMINDER: exiting with other exit code than 0 will break `git diff` 
+## REMINDER: exiting with other exit code than 0 will break `git diff`
 ## set the exit code
-#exit "${EXITCODE}"
+exit "0"

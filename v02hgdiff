@@ -154,7 +154,7 @@ if [[ "${#OUTPUT[@]}" -gt "0" ]]; then
         PLACEHOLDER1="/dev/null"
       else
         PLACEHOLDER1="a/${FILENAME}"
-      fi 
+      fi
 
       if [[ "${FILE2}" == "/dev/null" ]] || [[ ! -f "${FILE2}" ]]; then
         PLACEHOLDER2="/dev/null"
